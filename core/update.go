@@ -16,11 +16,11 @@ import (
 //
 // http://www.elasticsearch.org/guide/reference/api/update.html
 // TODO: finish this, it's fairly complex
-func Update(pretty bool, index string, _type string, id string) (api.BaseResponse, error) {
+func Update(pretty bool, index string, _type string, id string, data string) (api.BaseResponse, error) {
 	var url string
 	var retval api.BaseResponse
-	url = fmt.Sprintf("/%s/%s/%s/_update?%s", index, _type, id, api.Pretty(pretty))
-	body, err := api.DoCommand("POST", url, nil)
+	url = fmt.Sprintf("/%s/%s/%s/_update?retry_on_conflict=5&%s", index, _type, id, api.Pretty(pretty))
+	body, err := api.DoCommand("POST", url, data)
 	if err != nil {
 		return retval, err
 	}
@@ -31,6 +31,6 @@ func Update(pretty bool, index string, _type string, id string) (api.BaseRespons
 			return retval, jsonErr
 		}
 	}
-	fmt.Println(body)
+	//fmt.Println(body)
 	return retval, err
 }
